@@ -50,23 +50,6 @@ async function createUser(req,res) {
 }
 
 
-async function loginUser(req,res) {
-    const { username,password } = req.body;
-    const dbUser = await prisma.user.findUnique({
-        where:{
-            username: username
-        },
-    });
-    let isMatch = await bcrypt.compare(password, dbUser.password);
-    if (isMatch){
-        console.log(isMatch);
-        console.log("Passwords match! Logging in");
-        res.render("home")
-    }
-    else{
-        console.log(isMatch);
-        console.log("Error logging in, check password")
-    }
-}
 
-module.exports = { renderLoginForm, renderRegisterForm, createUser, loginUser}
+
+module.exports = { renderLoginForm, renderRegisterForm, createUser}
