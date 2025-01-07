@@ -107,7 +107,8 @@ async function fileHandler(req, res) {
 
     // Create database entry
     try {
-      const newFile = await prisma.file.create({
+      // Create new file entry
+      await prisma.file.create({
         data: {
           fileURL: publicUrlData.publicUrl,
           size: file.size,
@@ -119,15 +120,42 @@ async function fileHandler(req, res) {
         }
       });
 
-      // Return success response
+      // Fetch all files in the folder
+      const allFiles = await prisma.file.findMany({
+        where: {
+          folderId: parseInt(folderId)
+        },
+        orderBy: {
+          fileId: 'desc'  // Show newest files first
+        }
+      });
+
+      // Get original filenames from fileURLs
+      const files = allFiles.map(dbFile => {
+        // Extract the base64 encoded filename from the URL
+        const urlParts = dbFile.fileURL.split('/');
+        const encodedFileName = urlParts[urlParts.length - 1].split('_')[1]?.split('.')[0];
+        let originalName = '';
+        
+        try {
+          // Decode the base64 filename
+          originalName = Buffer.from(encodedFileName, 'base64').toString();
+        } catch (e) {
+          originalName = "Unknown filename";
+        }
+
+        return {
+          name: originalName,
+          size: dbFile.size,
+          uploadedAt: new Date().toISOString(),
+          fileURL: dbFile.fileURL
+        };
+      });
+      
+      // Return success response with all files
       return res.render("viewFolder", {
         folderId,
-        file: {
-          name: file.name,
-          size: file.size || "Unknown",
-          uploadedAt: new Date().toISOString(),
-          url: publicUrlData.publicUrl,
-        },
+        files
       });
 
     } catch (prismaError) {
@@ -149,7 +177,6 @@ async function fileHandler(req, res) {
     });
   }
 }
-
 
 async function createFolder(req,res) {
   const { folderName } = req.body;
@@ -228,10 +255,48 @@ async function renderUpdateFolderForm(req, res) {
 
 async function viewFolder(req, res) {
   const { folderId } = req.query;
-  res.render("viewFolder", {
-    folderId: folderId,
-    file: null  
-  });
+  
+  try {
+    // Fetch all files in the folder
+    const allFiles = await prisma.file.findMany({
+      where: {
+        folderId: parseInt(folderId)
+      },
+      orderBy: {
+        fileId: 'desc'  // Show newest files first
+      }
+    });
+
+    // Get original filenames from fileURLs
+    const files = allFiles.map(dbFile => {
+      // Extract the base64 encoded filename from the URL
+      const urlParts = dbFile.fileURL.split('/');
+      const encodedFileName = urlParts[urlParts.length - 1].split('_')[1]?.split('.')[0];
+      let originalName = '';
+      
+      try {
+        // Decode the base64 filename
+        originalName = Buffer.from(encodedFileName, 'base64').toString();
+      } catch (e) {
+        originalName = "Unknown filename";
+      }
+
+      return {
+        name: originalName,
+        size: dbFile.size,
+        uploadedAt: new Date().toISOString(),
+        fileURL: dbFile.fileURL
+      };
+    });
+
+    res.render("viewFolder", {
+      folderId: folderId,
+      files: files
+    });
+  } catch (error) {
+    console.error("Error fetching files:", error);
+    res.status(500).send("Error fetching files");
+  }
 }
 
 module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler, createFolder, showFolders, deleteFolders,viewFolder, updateFolder, renderUpdateFolderForm}

@@ -7,14 +7,21 @@
 </head>
 <body>
     <h1>File details</h1>
-    <% if (typeof file !== 'undefined' && file) { %>
+    <% if (typeof files !== 'undefined' && files && files.length > 0) { %>
         <p>Folder Id: <%= folderId %></p>
-        <p>File Name: <%= file.name %></p>
-        <p>File size: <%= file.size %></p>
-        <p>Uploaded at: <%= file.uploadedAt %></p>
-        <a href="<%= file.url %>" target="_blank">Download</a>
+        <% files.forEach(file => { %>
+            <div class="file-item">
+                <p>File Name: <%= file.name %></p>
+                <p>File Size: <%= file.size ? `${(file.size/1024).toFixed(2)} KB` : "Unknown" %></p>
+                <p>Uploaded At: <%= file.uploadedAt %></p>
+                <p>Public URL: <%= file.fileURL %></p>
+                <a href="<%= file.fileURL %>" target="_blank">Download</a>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No files found in this folder</p>
     <% } %>
-
+    <a href="/showFolders">back</a>
     <form action="/upload?folderId=<%= folderId %>" method="post" enctype="multipart/form-data">
         <h2>Upload your files here</h2>
         <label for="uploadedFile">Select a file:</label>
