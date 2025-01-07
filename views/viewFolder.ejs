@@ -7,17 +7,19 @@
 </head>
 <body>
     <h1>File details</h1>
-    <p>Folder Id: <%=folderId %></p>
-    <p>File Name:</p>
-    <p>File size:</p>
-    <p>uploaded at: <%= new Date(new Date() - 3600 * 1000 * 3).toISOString() %></p>
-    <a href="#">Download</a>
+    <% if (typeof file !== 'undefined' && file) { %>
+        <p>Folder Id: <%= folderId %></p>
+        <p>File Name: <%= file.name %></p>
+        <p>File size: <%= file.size %></p>
+        <p>Uploaded at: <%= file.uploadedAt %></p>
+        <a href="<%= file.url %>" target="_blank">Download</a>
+    <% } %>
 
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <form action="/upload?folderId=<%= folderId %>" method="post" enctype="multipart/form-data">
         <h2>Upload your files here</h2>
-        <label for="uploadedFile"></label>
-        <input type="file" name="uploadedFile" id="uploadedFile">
-        <input type="submit" value="Upload">
+        <label for="uploadedFile">Select a file:</label>
+        <input type="file" name="uploadedFile" id="uploadedFile" required>
+        <button type="submit">Upload</button>
     </form>
 </body>
 </html>

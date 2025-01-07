@@ -2,8 +2,6 @@ const { Router } = require("express");
 const router = Router();
 const passport = require("passport");
 const usersController = require("../controllers/usersController");
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
 
 router.post("/", passport.authenticate("local", {
     successRedirect: "/home",
@@ -30,9 +28,7 @@ router.post("/updateFolderDetails", usersController.renderUpdateFolderForm);
 router.post("/updateFolder", usersController.updateFolder);
 router.post("/showFolders", usersController.deleteFolders); 
 router.post("/register", usersController.createUser); 
-router.post("/upload", upload.single("uploadedFile"), (req,res) => {
-    res.redirect("/viewFolder")
-}); 
+router.post("/upload", usersController.fileHandler); 
 router.post("/newFolder", usersController.createFolder); 
 
 module.exports = router;

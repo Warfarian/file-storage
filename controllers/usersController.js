@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcryptjs");
 const fileUpload = require("express-fileupload");
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
-
+const { createClient } = require('@supabase/supabase-js');
+require("dotenv").config();
+const supabase = require('../config/supabase'); 
 function renderLoginForm(req,res){
     res.render("login");
 }
@@ -51,11 +51,45 @@ async function createUser(req,res) {
     res.redirect("/");
 }
 
-async function fileHandler(req,res) {
-  const {folderId} = req.query;
-  const file = await prisma.file.create({
-    
-  })
+async function fileHandler(req, res) {
+  try {
+    const { folderId } = req.query;
+    if (!req.files || !req.files.uploadedFile) {
+      throw new Error('No file uploaded');
+    }
+
+    const file = req.files.uploadedFile;
+    const fileName = `${Date.now()}_${file.name}`;
+    const filePath = `${folderId}/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from("file_storage")
+      .upload(`${folderId}/${fileName}`, file.data, {
+        contentType: file.mimetype,
+        upsert: false
+      });
+
+    const { data:urlData } = await supabase.storage
+      .from("file_storage")
+      .getPublicUrl(filePath)
+
+      return res.render('viewFolder', {
+        folderId: folderId,
+        file: {
+          name: file.name,
+          size: file.size,
+          uploadedAt: new Date(new Date() - 3600 * 1000 * 3).toISOString(),
+          url: urlData.publicUrl
+        }
+      });
+
+  } catch (err) {
+    console.error('ERROR:', err.message);
+    console.error('Stack:', err.stack);
+    return res.status(500).json({ 
+      error: err.message
+    });
+  }
 }
 
 function fileDownloader(req, res) {
@@ -143,9 +177,12 @@ async function renderUpdateFolderForm(req, res) {
   }
 }
 
-async function viewFolder(req,res) {
-  const {folderId} = req.query
-  res.render("viewFolder", {folderId: folderId})
+async function viewFolder(req, res) {
+  const { folderId } = req.query;
+  res.render("viewFolder", {
+    folderId: folderId,
+    file: null  // Initially no file data
+  });
 }
 
 module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders,viewFolder, updateFolder, renderUpdateFolderForm}

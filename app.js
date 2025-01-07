@@ -9,12 +9,18 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
+const fileUpload = require('express-fileupload');
 
 require("dotenv").config();
 
 const PORT = process.env.PORT;
 
 app.use(express.urlencoded({extended:false}));
+app.use(fileUpload({
+  limits: { fileSize: 100 * 1024 * 1024 }, 
+  useTempFiles: false,
+  abortOnLimit: true
+}));
 
 
 app.use(session({
@@ -90,4 +96,4 @@ app.use("/logout",(req, res, next) => {
 
 
 
-app.listen(PORT , () => console.log(`App listening on port ${PORT}`));
+app.listen(PORT || 3000 , () => console.log(`App listening on port ${PORT}`));

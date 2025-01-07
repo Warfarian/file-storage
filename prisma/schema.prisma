@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Session {
@@ -37,6 +38,7 @@ model Folder {
 
 model File {
   fileId   Int      @id @unique
+  fileURL String
   folderId Int
   size     Int
   folder   Folder   @relation(fields: [folderId], references: [folderId])

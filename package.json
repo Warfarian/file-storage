@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/client": "^6.1.0",
     "@quixo3/prisma-session-store": "^3.1.13",
+    "@supabase/supabase-js": "^2.47.10",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
@@ -26,6 +27,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pg": "^8.13.1",
+    "supabase": "^2.2.1",
     "uuid": "^11.0.4"
   }
 }
