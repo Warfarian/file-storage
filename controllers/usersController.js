@@ -51,8 +51,11 @@ async function createUser(req,res) {
     res.redirect("/");
 }
 
-function fileHandler(req,res) {
+async function fileHandler(req,res) {
+  const {folderId} = req.query;
+  const file = await prisma.file.create({
     
+  })
 }
 
 function fileDownloader(req, res) {
@@ -81,7 +84,6 @@ async function createFolder(req,res) {
     },
   });
   
-  // res.render("upload", {username: username})
   res.redirect("showFolders")
 }
 
@@ -141,4 +143,9 @@ async function renderUpdateFolderForm(req, res) {
   }
 }
 
-module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders, updateFolder, renderUpdateFolderForm}
+async function viewFolder(req,res) {
+  const {folderId} = req.query
+  res.render("viewFolder", {folderId: folderId})
+}
+
+module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders,viewFolder, updateFolder, renderUpdateFolderForm}

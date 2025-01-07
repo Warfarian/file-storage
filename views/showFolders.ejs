@@ -22,6 +22,10 @@
                     <input type="hidden" name="folderId" value="<%= folder.folderId %>">
                     <input type="submit" value="Update">
                 </form>
+                <form action="/viewFolder" method="get">
+                    <input type="hidden" name="folderId" value="<%= folder.folderId %>">
+                    <input type="submit" value="View Folder files">
+                </form>
                 <a href="/home">home</a>
             <% }) %>
         </div>

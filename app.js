@@ -86,8 +86,7 @@ app.use("/logout",(req, res, next) => {
       res.redirect("/");
     });
   })
-  
-app.get("/log-out", );
+
 
 
 

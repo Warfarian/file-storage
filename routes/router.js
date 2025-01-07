@@ -24,11 +24,15 @@ router.get("/home",isAuthenticated, (req,res) => {
 });   
 router.get("/register", usersController.renderRegisterForm); 
 router.get("/showFolders", usersController.showFolders); 
+router.get("/viewFolder", usersController.viewFolder); 
+router.get("/upload", usersController.fileHandler);
 router.post("/updateFolderDetails", usersController.renderUpdateFolderForm);
 router.post("/updateFolder", usersController.updateFolder);
 router.post("/showFolders", usersController.deleteFolders); 
 router.post("/register", usersController.createUser); 
-// router.post("/upload", upload.single("uploadedFile")); 
+router.post("/upload", upload.single("uploadedFile"), (req,res) => {
+    res.redirect("/viewFolder")
+}); 
 router.post("/newFolder", usersController.createFolder); 
 
 module.exports = router;

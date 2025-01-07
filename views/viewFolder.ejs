@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder <%=folderId  %></title>
+</head>
+<body>
+    <h1>File details</h1>
+    <p>Folder Id: <%=folderId %></p>
+    <p>File Name:</p>
+    <p>File size:</p>
+    <p>uploaded at: <%= new Date(new Date() - 3600 * 1000 * 3).toISOString() %></p>
+    <a href="#">Download</a>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <h2>Upload your files here</h2>
+        <label for="uploadedFile"></label>
+        <input type="file" name="uploadedFile" id="uploadedFile">
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
