@@ -73,6 +73,7 @@ async function createFolder(req,res) {
   const folder = await prisma.folder.create({
     data: {
       createdAt: new Date(new Date() - 3600 * 1000 * 3).toISOString(), 
+      folderName: folderName,
       user: {
         connect: {
           id: user.id, 
@@ -81,8 +82,30 @@ async function createFolder(req,res) {
     },
   });
   
-  res.render("upload", {username: username})
+  // res.render("upload", {username: username})
+  res.redirect("showFolders")
 }
 
+async function showFolders(req,res) {
+  const userId = req.user.id;
+  const folders = await prisma.folder.findMany({
+    where:{
+      userId: userId
+    }
+  })
+  
+    res.render("showFolders",{folders:folders})
+}
 
-module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder}
+async function deleteFolders(req,res) {
+  const userId = req.user.id;
+  const { folderId } = req.body;
+  const deleteFolder = await prisma.folder.delete({
+    where:{
+      folderId: parseInt(folderId)
+    }
+  })
+  res.redirect("showFolders");
+}
+
+module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders}

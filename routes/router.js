@@ -23,6 +23,8 @@ router.get("/home",isAuthenticated, (req,res) => {
     res.render("home")
 });   
 router.get("/register", usersController.renderRegisterForm); 
+router.get("/showFolders", usersController.showFolders); 
+router.post("/showFolders", usersController.deleteFolders); 
 router.post("/register", usersController.createUser); 
 // router.post("/upload", upload.single("uploadedFile")); 
 router.post("/newFolder", usersController.createFolder); 
