@@ -6,7 +6,18 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Welcome back</h1>
+    <h1>Welcome</h1>
+    <form action="/newFolder" method="post">
+        <h2>Create a folder to begin</h2>
+        <label for="folderName">Folder Name:</label>
+        <input type="text" name="folderName" id="folderName">
+        <input type="submit" value="Create">
+    </form>
+
+    <!-- <form action="/download" method="get">
+        <input type="submit" value="Download files?">
+    </form> -->
+
     <a href="/logout">Log out</a>
 </body>
 </html>

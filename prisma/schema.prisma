@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,15 +8,38 @@ datasource db {
 }
 
 model Session {
-  id String @id @default(cuid())
-  sid String @unique
-  data String
+  id        String   @id @default(cuid())
+  sid       String   @unique
+  data      String
   expiresAt DateTime
 }
 
 model User {
-  id String @id @unique
-  username String @unique
-  email String @unique
+  id       String   @id @unique
+  username String   @unique
+  email    String   @unique
   password String
+  folders  Folder[] 
+}
+
+model Folder {
+  folderId      Int      @id @unique @default(autoincrement())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  parentFolderId Int?    
+  createdAt     DateTime    
+  fileName      String?
+  parentFolder  Folder?  @relation("FolderParent", fields: [parentFolderId], references: [folderId], onDelete: Cascade) 
+  childFolders  Folder[] @relation("FolderParent") 
+  files         File[] 
+  @@index([userId, parentFolderId]) 
+}
+
+model File {
+  fileId   Int      @id @unique
+  folderId Int
+  size     Int
+  folder   Folder   @relation(fields: [folderId], references: [folderId])
+
+  @@index([folderId]) 
 }
