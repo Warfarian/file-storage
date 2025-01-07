@@ -37,7 +37,7 @@ model Folder {
 }
 
 model File {
-  fileId   Int      @id @unique
+  fileId   Int      @id @unique @default(autoincrement())
   fileURL String
   folderId Int
   size     Int

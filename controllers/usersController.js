@@ -54,53 +54,102 @@ async function createUser(req,res) {
 async function fileHandler(req, res) {
   try {
     const { folderId } = req.query;
-    if (!req.files || !req.files.uploadedFile) {
-      throw new Error('No file uploaded');
+    
+    // Validate folderId
+    if (!folderId || isNaN(parseInt(folderId))) {
+      return res.status(400).json({ error: "Invalid folder ID" });
+    }
+
+    // File validation
+    if (!req.files?.uploadedFile) {
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
     const file = req.files.uploadedFile;
-    const fileName = `${Date.now()}_${file.name}`;
+    
+    // Basic file validation
+    if (!file.name || !file.data) {
+      return res.status(400).json({ error: "Invalid file format" });
+    }
+
+    // Create safe filename
+    const fileExtension = file.name.split('.').pop();
+    const safeFileName = `${Date.now()}_${Buffer.from(file.name).toString('base64')}`;
+    const fileName = `${safeFileName}.${fileExtension}`;
     const filePath = `${folderId}/${fileName}`;
 
-    const { data, error } = await supabase.storage
+    // Upload to Supabase
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from("file_storage")
-      .upload(`${folderId}/${fileName}`, file.data, {
+      .upload(filePath, file.data, {
         contentType: file.mimetype,
-        upsert: false
+        upsert: false,
       });
 
-    const { data:urlData } = await supabase.storage
-      .from("file_storage")
-      .getPublicUrl(filePath)
+    if (uploadError) {
+      console.error("Supabase upload error:", uploadError);
+      return res.status(500).json({
+        error: "Failed to upload file to storage",
+      });
+    }
 
-      return res.render('viewFolder', {
-        folderId: folderId,
-        file: {
-          name: file.name,
+    // Get public URL
+    const { data: publicUrlData, error: urlError } = await supabase.storage
+      .from("file_storage")
+      .getPublicUrl(filePath);
+
+    if (urlError) {
+      console.error("Public URL error:", urlError);
+      return res.status(500).json({
+        error: "Failed to generate public URL",
+      });
+    }
+
+    // Create database entry
+    try {
+      const newFile = await prisma.file.create({
+        data: {
+          fileURL: publicUrlData.publicUrl,
           size: file.size,
-          uploadedAt: new Date(new Date() - 3600 * 1000 * 3).toISOString(),
-          url: urlData.publicUrl
+          folder: {
+            connect: {
+              folderId: parseInt(folderId)
+            }
+          }
         }
       });
 
+      // Return success response
+      return res.render("viewFolder", {
+        folderId,
+        file: {
+          name: file.name,
+          size: file.size || "Unknown",
+          uploadedAt: new Date().toISOString(),
+          url: publicUrlData.publicUrl,
+        },
+      });
+
+    } catch (prismaError) {
+      console.error("Database error:", prismaError);
+      // If database entry fails, we should clean up the uploaded file
+      await supabase.storage
+        .from("file_storage")
+        .remove([filePath]);
+        
+      return res.status(500).json({
+        error: "Failed to save file information",
+      });
+    }
+
   } catch (err) {
-    console.error('ERROR:', err.message);
-    console.error('Stack:', err.stack);
-    return res.status(500).json({ 
-      error: err.message
+    console.error("Unexpected error:", err);
+    return res.status(500).json({
+      error: "An unexpected error occurred",
     });
   }
 }
 
-function fileDownloader(req, res) {
-    // const filePath = __dirname + "/uploads/sample.txt"; 
-    // res.download(filePath, function (err) {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send("Failed to download the file.");
-    //     }
-    // });
-}
 
 async function createFolder(req,res) {
   const { folderName } = req.body;
@@ -181,8 +230,8 @@ async function viewFolder(req, res) {
   const { folderId } = req.query;
   res.render("viewFolder", {
     folderId: folderId,
-    file: null  // Initially no file data
+    file: null  
   });
 }
 
-module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders,viewFolder, updateFolder, renderUpdateFolderForm}
+module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler, createFolder, showFolders, deleteFolders,viewFolder, updateFolder, renderUpdateFolderForm}
