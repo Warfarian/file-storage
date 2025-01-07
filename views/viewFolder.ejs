@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Folder <%=folderId  %></title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>File details</h1>
-    <% if (typeof files !== 'undefined' && files && files.length > 0) { %>
-        <p>Folder Id: <%= folderId %></p>
-        <% files.forEach(file => { %>
-            <div class="file-item">
-                <p>File Name: <%= file.name %></p>
-                <p>File Size: <%= file.size ? `${(file.size/1024).toFixed(2)} KB` : "Unknown" %></p>
-                <p>Uploaded At: <%= file.uploadedAt %></p>
-                <p>Public URL: <%= file.fileURL %></p>
-                <a href="<%= file.fileURL %>" target="_blank">Download</a>
-            </div>
-        <% }); %>
+    <div class="fileDetails"> 
+        <% if (typeof files !== 'undefined' && files && files.length > 0) { %>
+            <p>Folder Id: <%= folderId %></p>
+            <% files.forEach(file => { %>
+                <div class="file-item">
+                    <p>File Name: <%= file.name %></p>
+                    <p>File Size: <%= file.size ? `${(file.size/1024).toFixed(2)} KB` : "Unknown" %></p>
+                    <p>Uploaded At: <%= file.uploadedAt %></p>
+                    <p>Public URL: <%= file.fileURL %></p>
+                    <a href="<%= file.fileURL %>" target="_blank">Download</a>
+                </div>
+            <% }); %>
+    </div>
     <% } else { %>
         <p>No files found in this folder</p>
     <% } %>

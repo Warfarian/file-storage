@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Register</h1>
-    <form action="/register" method="post">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="name">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email">
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password">
-        <input type="submit" value="Register">
-        <a href="/">Login if already a user</a>
-    </form>
+        <form action="/register" method="post">
+            <div class="register">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="name">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password">
+                <input type="submit" value="Register">
+                <a href="/">Login if already a user</a>
+            </div>
+        </form>
 </body>
 </html>

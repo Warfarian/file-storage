@@ -1,0 +1,267 @@
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+:root {
+    /* Colors */
+    --color-primary: #3b82f6;
+    --color-primary-dark: #2563eb;
+    --color-primary-darker: #1e40af;
+    --color-text: #1a1a1a;
+    --color-text-secondary: #374151;
+    --color-text-tertiary: #6b7280;
+    --color-background: #ffffff;
+    --color-background-secondary: #f9fafb;
+    --color-border: #e5e7eb;
+    
+    /* Shadows */
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 8px 15px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+/* Layout */
+body {
+    background: linear-gradient(120deg, #f8fafc, #e5e9f2);
+    padding: var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+    color: var(--color-text);
+}
+
+/* Typography */
+h1 {
+    color: #111827;
+    margin-bottom: var(--spacing-lg);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: var(--color-text);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: var(--spacing-xs);
+}
+
+/* Links */
+a {
+    margin: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--color-text-tertiary);
+    font-size: large;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--color-text);
+}
+
+/* File Components */
+.file-item {
+    background: linear-gradient(135deg, var(--color-background), var(--color-background-secondary));
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--color-border);
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.file-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.file-item p {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.file-item p strong {
+    color: var(--color-text);
+    font-weight: 600;
+    margin-right: var(--spacing-xs);
+}
+
+/* Button Styles */
+.button,
+input[type="submit"],
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+}
+
+.button:hover,
+input[type="submit"]:hover,
+button:hover {
+    background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary-darker));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.button:active,
+input[type="submit"]:active,
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+button:disabled,
+input[type="submit"]:disabled {
+    background: #e2e8f0;
+    color: var(--color-text-tertiary);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Form Styles */
+.login,
+.register {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-background-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    max-width: 400px;
+    margin: var(--spacing-lg) auto;
+}
+
+input[type="text"] , input[type= "password"], input[type="email"]{
+    padding: var(--spacing-xs);
+    margin: var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 4px rgba(0, 102, 255, 0.3);
+}
+
+.folderDeets{
+    background: linear-gradient(135deg, var(--color-background), var(--color-background-secondary));
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--color-border);
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+p{
+    margin: 4px;
+    padding: 4px;
+}
+
+input[type="submit"]{
+    margin: 4px;
+}
+
+
+/* Grid Layout */
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--color-text-tertiary), #4b5563);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-sm);
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .file-item,
+    .login,
+    .register {
+        padding: var(--spacing-md);
+    }
+
+    .button,
+    input[type="submit"],
+    button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
