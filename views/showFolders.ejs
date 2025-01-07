@@ -18,6 +18,11 @@
                     <input type="hidden" name="folderId" value="<%= folder.folderId %>">
                     <input type="submit" value="Delete">
                 </form>
+                <form action="/updateFolderDetails" method="post">
+                    <input type="hidden" name="folderId" value="<%= folder.folderId %>">
+                    <input type="submit" value="Update">
+                </form>
+                <a href="/home">home</a>
             <% }) %>
         </div>
     </div>

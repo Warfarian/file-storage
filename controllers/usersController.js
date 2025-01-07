@@ -1,4 +1,3 @@
-
 // prisma stuff 
 
 const { PrismaClient } = require('@prisma/client');
@@ -108,4 +107,38 @@ async function deleteFolders(req,res) {
   res.redirect("showFolders");
 }
 
-module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders}
+async function updateFolder(req, res) {
+  const { folderId, folderName } = req.body;  // The folderId and folderName are sent in the body
+  
+  const folder = await prisma.folder.findUnique({
+    where: { folderId: parseInt(folderId) },
+  });
+
+  if (folder) {
+    // Update the folder's name
+    await prisma.folder.update({
+      where: { folderId: parseInt(folderId) },
+      data: { folderName: folderName },
+    });
+
+    // After update, redirect back to the showFolders page
+    res.redirect("/showFolders");
+  } else {
+    res.status(404).send("Folder not found");
+  }
+}
+
+async function renderUpdateFolderForm(req, res) {
+  const { folderId } = req.body;
+  const folder = await prisma.folder.findUnique({
+    where: { folderId: parseInt(folderId) }
+  });
+  
+  if (folder) {
+    res.render("updateFolderDetails", { folder: folder });
+  } else {
+    res.status(404).send("Folder not found");
+  }
+}
+
+module.exports = { renderLoginForm, renderRegisterForm, createUser, fileHandler,fileDownloader, createFolder, showFolders, deleteFolders, updateFolder, renderUpdateFolderForm}

@@ -75,9 +75,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 //routes
-app.use("/", router);
-app.use("/register", router);
-app.use("/home", router);
+  app.use("/", router);
+  app.use("/register", router);
+  app.use("/home", router);
 app.use("/logout",(req, res, next) => {
     req.logout((err) => {
       if (err) {
